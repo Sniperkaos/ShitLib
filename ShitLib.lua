@@ -222,6 +222,9 @@ function NewErrorObject(ErrorText)
 	end
 	return a
 end
+function ShitLib:RemoveObject(object)
+	object:Destroy()
+end
 function ShitLib:CreateGui(parent,guiName)
 		local gui = Instance.new("ScreenGui")
 		gui.Name = guiName or "SponsoredByShitLib"
@@ -236,6 +239,15 @@ function ShitLib:CreateGui(parent,guiName)
 			end
 		end)()
 		return gui 
+end
+function ShitLib:HandleError(err)
+	local s,f = pcall(function()
+		err:IsErrorObject()
+	end)
+	if not f then
+		return err.Error,err.Time,err.ExactTime
+	end
+	return false
 end
 function ShitLib:IsVisible(window)
 	return (window.Visible == true)
@@ -295,9 +307,6 @@ function ShitLib:CreateButton(size,text,callback,window)
 	end)
 	button.Text = text
 	return button
-end
-function ShitLib:Parent(obj,window)
-	obj.Parent = window
 end
 function ShitLib:CreateDraggableWindow(f,screenpos,title,size)
 	local gui = script.Objects.Frame:Clone()
