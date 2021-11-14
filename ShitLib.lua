@@ -176,11 +176,30 @@ Intro.End()
 function ShitLib:CreateSwitch(size,text,callback,window)
 	return NewErrorObject("Not Implemented Yet!")
 end
+function ShitLib:UpdateText(object,nText)
+	object.Text = nText
+	return object
+end
 function ShitLib:GetGuiObject(gui)
 	return gui
 end
-function ShitLib:CreateInputObject(size,text,callback,window)
+function ShitLib:CreateInputObject(size,text,callback,window,keybind)
 	local IObj = TextBox:Clone()
+	if keybind then
+		local r = true
+		k2 = UserInputService.InputBegan:Connect(function(k,gpe)
+			if k.KeyCode == keybind and not gpe then
+				if r == true then
+					r = false
+					IObj:CaptureFocus()
+				else
+					r = true
+					IObj:ReleaseFocus()
+					IObj.Text = ""
+				end
+			end
+		end)
+	end
 	IObj.Parent = window.Other
 	IObj.TextEditable = true
 	IObj.Selectable = true
